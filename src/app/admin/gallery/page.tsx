@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
 type GalleryItem = {
@@ -24,6 +25,9 @@ const emptyForm: GalleryForm = {
 };
 
 export default function AdminGalleryPage() {
+  const router = useRouter();
+  const [checkingAdmin, setCheckingAdmin] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [photos, setPhotos] = useState<GalleryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -66,8 +70,31 @@ export default function AdminGalleryPage() {
   }
 
   useEffect(() => {
-    loadPhotos();
-  }, []);
+    async function checkAdminAccess() {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session) {
+        router.replace("/admin");
+        return;
+      }
+
+      const { data, error } = await supabase.rpc("is_admin");
+
+      if (error || data !== true) {
+        await supabase.auth.signOut();
+        router.replace("/admin");
+        return;
+      }
+
+      setIsAdmin(true);
+      setCheckingAdmin(false);
+      await loadPhotos();
+    }
+
+    checkAdminAccess();
+  }, [router]);
 
   function resetForm() {
     setForm(emptyForm);
@@ -417,6 +444,24 @@ export default function AdminGalleryPage() {
 
     setSuccessMessage(
       "Gallery photo deleted successfully."
+    );
+  }
+
+  if (checkingAdmin || !isAdmin) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-slate-50 px-6">
+        <div className="rounded-3xl bg-white p-10 text-center shadow-sm">
+          <p className="text-sm font-bold uppercase tracking-[0.15em] text-blue-600">
+            RWSA – AERW
+          </p>
+          <h1 className="mt-3 text-2xl font-bold text-slate-900">
+            Checking administrator access...
+          </h1>
+          <p className="mt-2 text-slate-500">
+            Please wait while we verify your session.
+          </p>
+        </div>
+      </main>
     );
   }
 
