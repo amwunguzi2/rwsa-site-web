@@ -517,7 +517,7 @@ export default function Home() {
 
           <div>
 
-            <p className="mb-4 text-sm font-bold uppercase tracking-[0.25em] text-green-600">
+            <p className="mb-4 text-sm font-bold uppercase tracking-[0.25em] text-green-700">
               {en ? "Our Mission" : "Notre mission"}
             </p>
 
@@ -557,6 +557,7 @@ export default function Home() {
               src="/images/hero/group.jpg"
               alt="RWSA AERW group"
               fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-cover object-center"
             />
 
@@ -613,7 +614,7 @@ export default function Home() {
                   href={eventbrite}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-8 inline-flex rounded-full bg-blue-500 px-7 py-3 font-bold text-white transition hover:bg-blue-400"
+                  className="mt-8 inline-flex rounded-full bg-blue-700 px-7 py-3 font-bold text-white transition hover:bg-blue-800"
                 >
                   {en ? "View our Eventbrite →" : "Voir notre Eventbrite →"}
                 </a>
@@ -757,7 +758,7 @@ export default function Home() {
 
                   <div className="flex flex-1 flex-col p-6">
 
-                    <p className="text-xs font-bold uppercase tracking-widest text-green-600">
+                    <p className="text-xs font-bold uppercase tracking-widest text-green-700">
                       {en ? event.label_en : event.label_fr}
                     </p>
 
@@ -813,7 +814,7 @@ export default function Home() {
 
             <div>
 
-              <p className="text-sm font-bold uppercase tracking-[0.25em] text-green-600">
+              <p className="text-sm font-bold uppercase tracking-[0.25em] text-green-700">
                 {en ? "Our memories" : "Nos souvenirs"}
               </p>
 
@@ -971,7 +972,7 @@ export default function Home() {
 
               <div className="flex min-h-full flex-col justify-center rounded-[2rem] bg-white p-8 shadow-sm md:p-12 lg:p-14">
 
-                <p className="text-sm font-bold uppercase tracking-[0.2em] text-yellow-600">
+                <p className="text-sm font-bold uppercase tracking-[0.2em] text-yellow-700">
                   {en ? "Collaborators" : "Collaborateurs"}
                 </p>
 
@@ -1087,7 +1088,7 @@ export default function Home() {
                 <div className="mt-7 space-y-4">
 
                   <div className="flex gap-3">
-                    <span className="font-bold text-green-600">✓</span>
+                    <span className="font-bold text-green-700">✓</span>
                     <p className="text-slate-700">
                       {en
                         ? "Join our community and WhatsApp group"
@@ -1096,7 +1097,7 @@ export default function Home() {
                   </div>
 
                   <div className="flex gap-3">
-                    <span className="font-bold text-green-600">✓</span>
+                    <span className="font-bold text-green-700">✓</span>
                     <p className="text-slate-700">
                       {en
                         ? "Stay informed about events and association activities"
@@ -1105,7 +1106,7 @@ export default function Home() {
                   </div>
 
                   <div className="flex gap-3">
-                    <span className="font-bold text-green-600">✓</span>
+                    <span className="font-bold text-green-700">✓</span>
                     <p className="text-slate-700">
                       {en
                         ? "Receive information about membership and registration"
@@ -1114,7 +1115,7 @@ export default function Home() {
                   </div>
 
                   <div className="flex gap-3">
-                    <span className="font-bold text-green-600">✓</span>
+                    <span className="font-bold text-green-700">✓</span>
                     <p className="text-slate-700">
                       {en
                         ? "Connect with other students in our community"
@@ -1136,7 +1137,7 @@ export default function Home() {
                     : "Devenir membre →"}
                 </a>
 
-                <p className="mt-4 text-xs leading-5 text-slate-400">
+                <p className="mt-4 text-xs leading-5 text-slate-600">
                   {en
                     ? "The membership form opens in Google Forms."
                     : "Le formulaire d’adhésion s’ouvre dans Google Forms."}
@@ -1156,7 +1157,7 @@ export default function Home() {
       <section id="join" className="bg-white">
         <div className="mx-auto max-w-7xl px-6 py-24">
           <div>
-            <p className="text-sm font-bold uppercase tracking-[0.25em] text-green-600">
+            <p className="text-sm font-bold uppercase tracking-[0.25em] text-green-700">
               {en ? "Get involved" : "Impliquez-vous"}
             </p>
 
@@ -1397,7 +1398,7 @@ export default function Home() {
               {email}
             </a>
 
-            <p className="mt-4 text-slate-500">
+            <p className="mt-4 text-slate-300">
               © 2026 RWSA – AERW
             </p>
 
