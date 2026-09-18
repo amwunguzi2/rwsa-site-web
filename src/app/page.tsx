@@ -88,8 +88,12 @@ export default function Home() {
   const eventbrite =
     "https://www.eventbrite.com/o/rwandan-student-association-des-etudiants-rwandais-120057976891";
 
-  const membershipForm =
+  const defaultMembershipForm =
     "https://docs.google.com/forms/d/e/1FAIpQLSeX0ERr999YinVrhMwwdjE8wws9p3Owr1pkafWWgc_tBpjYzg/viewform";
+
+  const [membershipForm, setMembershipForm] = useState(
+    defaultMembershipForm
+  );
 
   const instagram =
     "https://www.instagram.com/rwsa.uottawa/";
@@ -99,6 +103,27 @@ export default function Home() {
 
 
 
+
+  useEffect(() => {
+    async function loadMembershipForm() {
+      const { data, error } = await supabase
+        .from("site_settings")
+        .select("value")
+        .eq("key", "membership_form_url")
+        .maybeSingle();
+
+      if (error) {
+        console.error("Could not load membership form URL:", error);
+        return;
+      }
+
+      if (data?.value) {
+        setMembershipForm(data.value);
+      }
+    }
+
+    loadMembershipForm();
+  }, []);
 
   useEffect(() => {
     async function loadTeam() {

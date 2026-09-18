@@ -14,6 +14,10 @@ export default function AdminPage() {
   const [signingIn, setSigningIn] = useState(false);
   const [message, setMessage] = useState("");
 
+  const [membershipUrl, setMembershipUrl] = useState("");
+  const [savingMembershipUrl, setSavingMembershipUrl] = useState(false);
+  const [settingsMessage, setSettingsMessage] = useState("");
+
   useEffect(() => {
     checkAdmin();
   }, []);
@@ -51,6 +55,7 @@ export default function AdminPage() {
     }
 
     setAuthorized(true);
+    await loadMembershipUrl();
     setLoading(false);
   }
 
@@ -92,8 +97,73 @@ export default function AdminPage() {
     }
 
     setAuthorized(true);
+    await loadMembershipUrl();
     setPassword("");
     setSigningIn(false);
+  }
+
+  async function loadMembershipUrl() {
+    const { data, error } = await supabase
+      .from("site_settings")
+      .select("value")
+      .eq("key", "membership_form_url")
+      .maybeSingle();
+
+    if (error) {
+      console.error("Could not load membership form URL:", error);
+      setSettingsMessage("Could not load the membership link.");
+      return;
+    }
+
+    setMembershipUrl(data?.value ?? "");
+  }
+
+  async function saveMembershipUrl(
+    event: FormEvent<HTMLFormElement>
+  ) {
+    event.preventDefault();
+
+    const cleanUrl = membershipUrl.trim();
+
+    if (!cleanUrl) {
+      setSettingsMessage("Please enter a membership form link.");
+      return;
+    }
+
+    try {
+      new URL(cleanUrl);
+    } catch {
+      setSettingsMessage(
+        "Please enter a valid link beginning with https:// or http://."
+      );
+      return;
+    }
+
+    setSavingMembershipUrl(true);
+    setSettingsMessage("");
+
+    const { error } = await supabase
+      .from("site_settings")
+      .upsert(
+        {
+          key: "membership_form_url",
+          value: cleanUrl,
+          updated_at: new Date().toISOString(),
+        },
+        {
+          onConflict: "key",
+        }
+      );
+
+    if (error) {
+      setSettingsMessage(error.message);
+      setSavingMembershipUrl(false);
+      return;
+    }
+
+    setMembershipUrl(cleanUrl);
+    setSettingsMessage("Membership link saved successfully.");
+    setSavingMembershipUrl(false);
   }
 
   async function handleLogout() {
@@ -275,8 +345,8 @@ export default function AdminPage() {
 
           <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-600">
             Manage the association&apos;s events,
-            team, gallery, collaborators and
-            recruitment opportunities.
+            team, gallery, collaborators, recruitment
+            opportunities and website settings.
           </p>
         </div>
 
@@ -323,6 +393,88 @@ export default function AdminPage() {
               featured
             />
           </div>
+        </div>
+
+        <div className="mt-12 rounded-[2rem] border border-slate-200 bg-white p-7 shadow-sm md:p-8">
+          <div className="flex flex-col justify-between gap-5 md:flex-row md:items-start">
+            <div>
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-2xl">
+                🔗
+              </div>
+
+              <p className="mt-6 text-sm font-bold uppercase tracking-[0.2em] text-blue-600">
+                Website Settings
+              </p>
+
+              <h3 className="mt-2 text-2xl font-bold text-slate-900">
+                Become a Member Link
+              </h3>
+
+              <p className="mt-3 max-w-2xl leading-7 text-slate-600">
+                Update the form opened by the Become a Member /
+                Devenir membre buttons on the public website.
+              </p>
+            </div>
+          </div>
+
+          <form
+            onSubmit={saveMembershipUrl}
+            className="mt-7"
+          >
+            <label className="block">
+              <span className="text-sm font-bold text-slate-700">
+                Membership form URL
+              </span>
+
+              <input
+                type="url"
+                required
+                value={membershipUrl}
+                onChange={(event) => {
+                  setMembershipUrl(event.target.value);
+                  setSettingsMessage("");
+                }}
+                placeholder="https://docs.google.com/forms/..."
+                className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              />
+            </label>
+
+            {settingsMessage && (
+              <div
+                className={`mt-4 rounded-xl p-4 text-sm font-medium ${
+                  settingsMessage ===
+                  "Membership link saved successfully."
+                    ? "border border-green-200 bg-green-50 text-green-700"
+                    : "border border-red-200 bg-red-50 text-red-700"
+                }`}
+              >
+                {settingsMessage}
+              </div>
+            )}
+
+            <div className="mt-5 flex flex-wrap gap-3">
+              <button
+                type="submit"
+                disabled={savingMembershipUrl}
+                className="rounded-xl bg-[#071f18] px-6 py-3 font-bold text-white transition hover:bg-[#0b3025] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {savingMembershipUrl
+                  ? "Saving..."
+                  : "Save Membership Link"}
+              </button>
+
+              {membershipUrl && (
+                <a
+                  href={membershipUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-xl bg-slate-100 px-6 py-3 font-bold text-slate-700 transition hover:bg-slate-200"
+                >
+                  Test Current Link ↗
+                </a>
+              )}
+            </div>
+          </form>
         </div>
 
         <div className="mt-12 overflow-hidden rounded-[2rem] bg-[#071f18] text-white">
