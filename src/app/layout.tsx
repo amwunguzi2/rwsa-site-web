@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://rwsa-site-web-zyi3.vercel.app"),
+  metadataBase: new URL("https://www.rwsa-aerw.ca"),
 
   title: {
     default: "RWSA – AERW | Rwandan Students' Association at uOttawa",
