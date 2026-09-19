@@ -81,9 +81,13 @@ export default function Home() {
   const [eventsLoading, setEventsLoading] = useState(true);
   const [galleryPhotos, setGalleryPhotos] = useState<GalleryItem[]>([]);
   const [galleryLoading, setGalleryLoading] = useState(true);
+  const [galleryExpanded, setGalleryExpanded] = useState(false);
   const [openPositions, setOpenPositions] = useState<Position[]>([]);
   const [positionsLoading, setPositionsLoading] = useState(true);
   const en = language === "en";
+  const visibleGalleryPhotos = galleryExpanded
+    ? galleryPhotos
+    : galleryPhotos.slice(0, 8);
 
   const eventbrite =
     "https://www.eventbrite.com/o/rwandan-student-association-des-etudiants-rwandais-120057976891";
@@ -843,29 +847,50 @@ export default function Home() {
                 : "De nouveaux souvenirs seront bientôt ajoutés."}
             </div>
           ) : (
-            <div className="mt-12 grid gap-4 md:grid-cols-12">
-              {galleryPhotos.map((photo, index) => {
-                const wide = index % 4 === 0 || index % 4 === 3;
+            <>
+              <div className="mt-12 grid gap-4 md:grid-cols-12">
+                {visibleGalleryPhotos.map((photo, index) => {
+                  const wide = index % 4 === 0 || index % 4 === 3;
 
-                return (
-                  <div
-                    key={photo.id}
-                    className={`relative h-80 overflow-hidden rounded-3xl ${
-                      wide ? "md:col-span-7" : "md:col-span-5"
-                    }`}
+                  return (
+                    <div
+                      key={photo.id}
+                      className={`relative h-80 overflow-hidden rounded-3xl ${
+                        wide ? "md:col-span-7" : "md:col-span-5"
+                      }`}
+                    >
+                      <img
+                        src={photo.image_url}
+                        alt={
+                          (en ? photo.title_en : photo.title_fr) ||
+                          (en ? "RWSA gallery photo" : "Photo de la galerie RWSA")
+                        }
+                        className="h-full w-full object-cover object-center transition duration-500 hover:scale-105"
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+
+              {galleryPhotos.length > 8 && (
+                <div className="mt-10 flex justify-center">
+                  <button
+                    type="button"
+                    onClick={() => setGalleryExpanded((expanded) => !expanded)}
+                    className="rounded-full border border-slate-300 bg-white px-7 py-3 font-bold text-slate-800 transition hover:border-green-700 hover:text-green-700"
+                    aria-expanded={galleryExpanded}
                   >
-                    <img
-                      src={photo.image_url}
-                      alt={
-                        (en ? photo.title_en : photo.title_fr) ||
-                        (en ? "RWSA gallery photo" : "Photo de la galerie RWSA")
-                      }
-                      className="h-full w-full object-cover object-center transition duration-500 hover:scale-105"
-                    />
-                  </div>
-                );
-              })}
-            </div>
+                    {galleryExpanded
+                      ? en
+                        ? "View less ↑"
+                        : "Voir moins ↑"
+                      : en
+                        ? "View more ↓"
+                        : "Voir plus ↓"}
+                  </button>
+                </div>
+              )}
+            </>
           )}
 
         </div>
