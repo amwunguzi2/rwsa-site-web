@@ -1,36 +1,241 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🇷🇼 RWSA – AERW Website
 
-## Getting Started
+Official website of the **Rwandan Students' Association (RWSA – AERW)** at the **University of Ottawa / Université d'Ottawa**.
 
-First, run the development server:
+🌐 **Live Website:** https://www.rwsa-aerw.ca
+
+The website was designed and developed to provide the Rwandan student community at uOttawa with a central platform for discovering events, joining the association, exploring community activities, viewing recruitment opportunities, and staying connected with RWSA – AERW.
+
+---
+
+## ✨ Features
+
+### 🌍 Bilingual Experience
+- English and French interface
+- Instant EN / FR language switching
+- Bilingual event, team, membership, and recruitment content
+
+### 📅 Event Management
+- Upcoming events
+- Past event highlights
+- Event descriptions and collaboration information
+- Eventbrite registration links
+- Instagram recap links
+- Event images and details managed dynamically
+
+### 📸 Dynamic Gallery
+- Community and event photo gallery
+- Photos managed through the administration dashboard
+- Responsive photo layout
+- Expandable gallery with **View More / View Less**
+
+### 👥 Team & Collaborators
+- Executive team profiles
+- Roles and academic programs
+- Collaborator section
+- Photos and information managed dynamically
+
+### 🇷🇼 Membership
+- Dedicated membership section
+- Connection to the official RWSA – AERW membership form
+- Membership link can be updated directly from the admin dashboard
+
+### 💼 Recruitment
+- Dynamic recruitment opportunities
+- Position descriptions
+- Application deadlines
+- Application links
+- Open and closed position management
+
+### 🔐 Administration Dashboard
+A private administration area allows authorized RWSA – AERW administrators to manage website content without modifying the source code.
+
+Administrators can manage:
+
+- Events
+- Gallery photos
+- Team members
+- Collaborators
+- Recruitment positions
+- Membership form link
+
+The dashboard includes authentication, administrator authorization, content visibility controls, image uploads, editing, and deletion.
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **Next.js**
+- **React**
+- **TypeScript**
+- **Tailwind CSS**
+
+### Backend & Database
+- **Supabase**
+- PostgreSQL database
+- Supabase Authentication
+- Row Level Security (RLS)
+- Supabase Storage
+
+### Deployment & Infrastructure
+- **Vercel**
+- **Cloudflare DNS**
+- Custom `.ca` domain
+- GitHub-based continuous deployment
+
+---
+
+## 🔒 Security
+
+The project uses several security measures, including:
+
+- Supabase Authentication for administrator access
+- Administrator authorization checks
+- Row Level Security (RLS)
+- Restricted database write operations
+- Protected admin interfaces
+- Environment variables for Supabase configuration
+- No private API keys stored in the repository
+
+---
+
+## 📱 Responsive Design
+
+The website is designed for:
+
+- Desktop
+- Tablet
+- Mobile
+
+It includes a dedicated mobile navigation menu and responsive layouts throughout the website.
+
+---
+
+## 🔎 SEO & Accessibility
+
+The website includes:
+
+- Search engine metadata
+- Canonical URL
+- Dynamic sitemap
+- `robots.txt`
+- Open Graph metadata
+- Social sharing images
+- Google Search Console integration
+- Accessible color contrast
+- Responsive image optimization
+
+---
+
+## 📂 Project Structure
+
+```text
+rwsa-site-web/
+├── public/
+│   └── images/
+│       ├── branding/
+│       ├── events/
+│       ├── hero/
+│       └── team/
+│
+├── src/
+│   ├── app/
+│   │   ├── admin/
+│   │   │   ├── collaborators/
+│   │   │   ├── events/
+│   │   │   ├── gallery/
+│   │   │   ├── positions/
+│   │   │   └── team/
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   ├── robots.ts
+│   │   └── sitemap.ts
+│   │
+│   └── lib/
+│       └── supabase.ts
+│
+└── README.md
+```
+
+---
+
+## ⚙️ Local Development
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/amwunguzi2/rwsa-site-web.git
+```
+
+### 2. Enter the project
+
+```bash
+cd rwsa-site-web
+```
+
+### 3. Install dependencies
+
+```bash
+npm install
+```
+
+### 4. Configure environment variables
+
+Create a `.env.local` file in the root of the project:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key
+```
+
+> Do not commit `.env.local` or private credentials to GitHub.
+
+### 5. Start the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```text
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🚀 Deployment
 
-To learn more about Next.js, take a look at the following resources:
+The production website is deployed with **Vercel**.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Updates pushed to the main GitHub branch can be automatically deployed to the production website.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Production domain:**
 
-## Deploy on Vercel
+https://www.rwsa-aerw.ca
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🤝 RWSA – AERW
+
+**Rwandan Students' Association**  
+**Association des Étudiants Rwandais**
+
+University of Ottawa  
+Université d'Ottawa
+
+📧 aerwasauo@gmail.com  
+📸 Instagram: @rwsa.uottawa
+
+---
+
+## 👩🏾‍💻 Development
+
+Designed and developed by **Arielle Mwunguzi Icyeza**.
+
+Built as a modern digital platform for the Rwandan student community at the University of Ottawa.
+
+---
+
+© 2026 RWSA – AERW. All rights reserved.
