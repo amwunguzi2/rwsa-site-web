@@ -66,6 +66,62 @@ type Position = {
   active: boolean;
 };
 
+function buildGoogleCalendarUrl(eventItem: EventItem, en: boolean) {
+  if (!eventItem.event_date) {
+    return null;
+  }
+
+  const title = en ? eventItem.title_en : eventItem.title_fr;
+  const description =
+    (en ? eventItem.description_en : eventItem.description_fr) || "";
+  const collaboration =
+    (en ? eventItem.collaboration_en : eventItem.collaboration_fr) || "";
+
+  const details = [description, collaboration, "RWSA – AERW"]
+    .filter(Boolean)
+    .join("\n\n");
+
+  const formatCalendarDateTime = (date: Date) =>
+    date.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
+
+  const params = new URLSearchParams({
+    action: "TEMPLATE",
+    text: title,
+    details,
+  });
+
+  if (eventItem.location) {
+    params.set("location", eventItem.location);
+  }
+
+  if (eventItem.event_time) {
+    const start = new Date(
+      `${eventItem.event_date}T${eventItem.event_time.slice(0, 5)}:00`
+    );
+
+    if (!Number.isNaN(start.getTime())) {
+      const end = new Date(start.getTime() + 2 * 60 * 60 * 1000);
+      params.set(
+        "dates",
+        `${formatCalendarDateTime(start)}/${formatCalendarDateTime(end)}`
+      );
+    }
+  } else {
+    const [year, month, day] = eventItem.event_date.split("-").map(Number);
+    const nextDay = new Date(Date.UTC(year, month - 1, day + 1));
+    const startDate = eventItem.event_date.replaceAll("-", "");
+    const endDate = [
+      nextDay.getUTCFullYear(),
+      String(nextDay.getUTCMonth() + 1).padStart(2, "0"),
+      String(nextDay.getUTCDate()).padStart(2, "0"),
+    ].join("");
+
+    params.set("dates", `${startDate}/${endDate}`);
+  }
+
+  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+}
+
 export default function Home() {
   const [language, setLanguage] = useState<"en" | "fr">("en");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -694,16 +750,34 @@ export default function Home() {
                       </p>
                     )}
 
-                    {eventItem.eventbrite_url && (
-                      <a
-                        href={eventItem.eventbrite_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="mt-7 inline-flex rounded-full bg-yellow-400 px-6 py-3 font-bold text-slate-900 transition hover:bg-yellow-300"
-                      >
-                        {en ? "Register on Eventbrite →" : "S’inscrire sur Eventbrite →"}
-                      </a>
-                    )}
+                    <div className="mt-7 flex flex-wrap gap-3">
+                      {eventItem.eventbrite_url && (
+                        <a
+                          href={eventItem.eventbrite_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex rounded-full bg-yellow-400 px-6 py-3 font-bold text-slate-900 transition hover:bg-yellow-300"
+                        >
+                          {en
+                            ? "Register on Eventbrite →"
+                            : "S’inscrire sur Eventbrite →"}
+                        </a>
+                      )}
+
+                      {buildGoogleCalendarUrl(eventItem, en) && (
+                        <a
+                          href={buildGoogleCalendarUrl(eventItem, en) ?? "#"}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center rounded-full border border-white/30 bg-white/10 px-6 py-3 font-bold text-white transition hover:bg-white/20"
+                        >
+                          📅{" "}
+                          {en
+                            ? "Add to Calendar"
+                            : "Ajouter au calendrier"}
+                        </a>
+                      )}
+                    </div>
                   </div>
                 </article>
               ))}
