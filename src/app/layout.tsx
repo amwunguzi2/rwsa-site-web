@@ -15,6 +15,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.rwsa-aerw.ca"),
 
+  alternates: {
+    canonical: "/",
+  },
+
   title: {
     default: "RWSA – AERW | Rwandan Students' Association at uOttawa",
     template: "%s | RWSA – AERW",
