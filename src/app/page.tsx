@@ -82,6 +82,7 @@ export default function Home() {
   const [galleryPhotos, setGalleryPhotos] = useState<GalleryItem[]>([]);
   const [galleryLoading, setGalleryLoading] = useState(true);
   const [galleryExpanded, setGalleryExpanded] = useState(false);
+  const [selectedGalleryIndex, setSelectedGalleryIndex] = useState<number | null>(null);
   const [openPositions, setOpenPositions] = useState<Position[]>([]);
   const [positionsLoading, setPositionsLoading] = useState(true);
   const en = language === "en";
@@ -853,9 +854,11 @@ export default function Home() {
                   const wide = index % 4 === 0 || index % 4 === 3;
 
                   return (
-                    <div
+                    <button
                       key={photo.id}
-                      className={`relative h-80 overflow-hidden rounded-3xl ${
+                      type="button"
+                      onClick={() => setSelectedGalleryIndex(galleryPhotos.findIndex((item) => item.id === photo.id))}
+                      className={`group relative h-80 overflow-hidden rounded-3xl text-left focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-700 focus-visible:ring-offset-4 ${
                         wide ? "md:col-span-7" : "md:col-span-5"
                       }`}
                     >
@@ -865,9 +868,10 @@ export default function Home() {
                           (en ? photo.title_en : photo.title_fr) ||
                           (en ? "RWSA gallery photo" : "Photo de la galerie RWSA")
                         }
-                        className="h-full w-full object-cover object-center transition duration-500 hover:scale-105"
+                        className="h-full w-full object-cover object-center transition duration-500 group-hover:scale-105"
                       />
-                    </div>
+                      <div className="pointer-events-none absolute inset-0 bg-black/0 transition group-hover:bg-black/10" />
+                    </button>
                   );
                 })}
               </div>
@@ -896,6 +900,20 @@ export default function Home() {
         </div>
       </section>
 
+
+      {selectedGalleryIndex !== null && galleryPhotos[selectedGalleryIndex] && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 px-4 py-6" role="dialog" aria-modal="true" onClick={() => setSelectedGalleryIndex(null)}>
+          <button type="button" onClick={() => setSelectedGalleryIndex(null)} className="absolute right-4 top-4 z-20 flex h-12 w-12 items-center justify-center rounded-full bg-white text-3xl text-slate-900" aria-label={en ? "Close photo" : "Fermer la photo"}>×</button>
+          {galleryPhotos.length > 1 && <>
+            <button type="button" onClick={(e) => { e.stopPropagation(); setSelectedGalleryIndex((selectedGalleryIndex - 1 + galleryPhotos.length) % galleryPhotos.length); }} className="absolute left-3 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 text-3xl text-slate-900 md:left-8" aria-label={en ? "Previous photo" : "Photo précédente"}>‹</button>
+            <button type="button" onClick={(e) => { e.stopPropagation(); setSelectedGalleryIndex((selectedGalleryIndex + 1) % galleryPhotos.length); }} className="absolute right-3 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 text-3xl text-slate-900 md:right-8" aria-label={en ? "Next photo" : "Photo suivante"}>›</button>
+          </>}
+          <div className="flex max-h-full max-w-[92vw] flex-col items-center" onClick={(e) => e.stopPropagation()}>
+            <img src={galleryPhotos[selectedGalleryIndex].image_url} alt={(en ? galleryPhotos[selectedGalleryIndex].title_en : galleryPhotos[selectedGalleryIndex].title_fr) || (en ? "RWSA gallery photo" : "Photo de la galerie RWSA")} className="max-h-[78vh] max-w-full rounded-2xl object-contain shadow-2xl" />
+            <p className="mt-4 text-sm text-slate-300">{selectedGalleryIndex + 1} / {galleryPhotos.length}</p>
+          </div>
+        </div>
+      )}
 
       {/* TEAM */}
       <section id="team" className="bg-green-50">
